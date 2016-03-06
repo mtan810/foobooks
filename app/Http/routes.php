@@ -37,9 +37,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('/practice', function() {
         
-        echo 'app.url: '.config('app.url');
-        echo '<br>app.env: '.config('app.env');
-        return '';
+        $random = new Random();
+        return $random->getRandomString(10);
         
     });
     
