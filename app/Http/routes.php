@@ -1,47 +1,51 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Routes File
-|--------------------------------------------------------------------------
-|
-| Here is where you will register all of the routes in an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
 
 
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| This route group applies the "web" middleware group to every route
-| it contains. The "web" middleware group is defined in your HTTP
-| kernel and includes session state, CSRF protection, and more.
-|
-*/
-    
-Route::get('/', function () {
-    return view('welcome');
-});
 
+
+# ------------------------------------
+# Practice routes
+# ------------------------------------
+for($i = 0; $i <= 100; $i++) {
+    Route::get("/practice/ex".$i, "PracticeController@getEx".$i);
+}
+
+
+
+
+# ------------------------------------
+# Book specific routes
+# ------------------------------------
+Route::get('/', 'BookController@getIndex'); # Home
 Route::get('/books', 'BookController@getIndex');
+
+Route::get('/book/edit/{id?}', 'BookController@getEdit');
+Route::post('/book/edit', 'BookController@postEdit');
+
 Route::get('/book/create', 'BookController@getCreate');
 Route::post('/book/create', 'BookController@postCreate');
+
 Route::get('/book/show/{title?}', 'BookController@getShow');
 
-Route::get('/practice', function() {
-    
-    $random = new Random();
-    return $random->getRandomString(10);
-    
-});
 
-if (App::environment('local')) {
-    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');  
+
+
+# ------------------------------------
+# Misc debug routes
+# ------------------------------------
+# Restrict certain routes to only be viewable in the local environments
+if(App::environment('local')) {
+
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
+    Route::get('/drop', function() {
+        DB::statement('DROP database foobooks');
+        DB::statement('CREATE database foobooks');
+        return 'Dropped foobooks; created foobooks.';
+    });
+
 }
 
 Route::get('/debug', function() {
@@ -76,5 +80,5 @@ Route::get('/debug', function() {
     }
 
     echo '</pre>';
-    
+
 });
